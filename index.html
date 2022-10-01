@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>treeBinary</title>
+    <style></style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import { firefoxStr } from "./firefoxStr.js";
+      import { starStr } from "./starStr.js";
+      import { firefoxStr30 } from "./firefoxStr30.js";
+      const appDiv = document.getElementById("app");
+      let originalStr = firefoxStr;
+
+      // main(0);
+
+      //每一秒自動旋轉
+      function rotateInterval() {
+        let count = 0;
+        setInterval(function () {
+          count++;
+          if (count == 4) {
+            count = 0;
+          }
+          main(count);
+        }, 1000);
+      }
+      rotateInterval();
+
+      function main(count) {
+        let zeroOneArray = originalStringToArray(originalStr);
+        console.log(zeroOneArray);
+        zeroOneArray = rotateMatrix(zeroOneArray, count);
+        let innerHTMLStr = getInnerHTMLStr(zeroOneArray, 10);
+        appDiv.innerHTML = innerHTMLStr;
+      }
+
+      function originalStringToArray(originalStr) {
+        const originalStrAry = Array.from(originalStr);
+        const zeroOneArray = [];
+        let temporaryArray = [];
+        originalStrAry.forEach((element) => {
+          if (element !== "\n") {
+            temporaryArray.push(element);
+          } else {
+            zeroOneArray.push(temporaryArray);
+            temporaryArray = [];
+          }
+        });
+        return zeroOneArray;
+      }
+
+      function getInnerHTMLStr(zeroOneArray, gap = 10) {
+        let innerHTMLStr = ``;
+        for (let i = 0; i < zeroOneArray.length; i++) {
+          for (let j = 0; j < zeroOneArray[i].length; j++) {
+            if (zeroOneArray[i][j] == "1") {
+              innerHTMLStr += `<img src="./startOrigin.jpg" style="height:${gap}px;width:${gap}px; position:absolute; top:${
+                gap * i
+              }px; left:${gap * j}px" >`;
+            }
+          }
+        }
+        return innerHTMLStr;
+      }
+
+      function zeroOneArrayToString(zeroOneArray) {
+        let targetString = "";
+        for (let i = 0; i < zeroOneArray.length; i++) {
+          for (let j = 0; j < zeroOneArray[i].length; j++) {
+            targetString += zeroOneArray[i][j];
+          }
+          targetString += "\n";
+        }
+        return targetString;
+      }
+
+      function rotateMatrix(originalArray, number) {
+        // console.log(originalArray);
+        number = number % 4;
+        for (let i = 0; i < number; i++) {
+          originalArray = rotateRight90Degree(originalArray);
+        }
+
+        function rotateRight90Degree(inputArray) {
+          const rotateRight90Array = [];
+          for (let i = 0; i < inputArray[0].length; i++) {
+            let temArray = [];
+            for (let j = 0; j < inputArray.length; j++) {
+              temArray.unshift(inputArray[j][i]);
+            }
+            rotateRight90Array.push(temArray);
+          }
+          return rotateRight90Array;
+        }
+        return originalArray;
+      }
+    </script>
+  </body>
+</html>
